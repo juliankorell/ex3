@@ -67,26 +67,59 @@ public class ListIntersection {
     System.out.println();
   }
 
+  PostingList intersectBinary(PostingList list1, PostingList list2) {
+    if (list1.ids.length > list2.ids.length) {
+      return intersectBinary(list2, list1);
+    }
+    ArrayList<Integer> ids = new ArrayList<Integer>();
+    ArrayList<Integer> scores = new ArrayList<Integer>();
+    int i = 0;
+    while (i < list1.ids.length) {
+      int binaryResult = binarySearch(list1.ids[i], list2.ids);
+      if (binaryResult != -1) {
+        ids.add(list1.ids[i]);
+        scores.add(list1.scores[i] + list2.scores[binaryResult]);
+      }
+      i++;
+    }
+    return new PostingList(ids, scores, 1, 0);
+  }
+
+  int binarySearch(int key, int[] ids) {
+    int low = 0;
+    int high = ids.length - 1;
+    while (low <= high) {
+      int mid = low + (high - low) / 2;
+      if  (key < ids[mid]) { high = mid - 1; }
+      else if (key > ids[mid]) { low = mid + 1; }
+      else return mid;
+    }
+    return -1;
+  }
+
   /**
    * Simple linear-time intersect.
    */
   PostingList intersect(PostingList list1, PostingList list2) {
+    int n1 = list1.ids.length;
+    int n2 = list2.ids.length;
     int i = 0;
     int j = 0;
     ArrayList<Integer> ids = new ArrayList<Integer>();
     ArrayList<Integer> scores = new ArrayList<Integer>();
-    int maxValue = Integer.MAX_VALUE;
-    while (true) {
-      while (list1.ids[i] < list2.ids[j]) { i++; }
-      while (list2.ids[j] < list1.ids[i]) { j++; }
+    while (i < n1 && j < n2) {
+      while (i < n1 && list1.ids[i] < list2.ids[j]) { i++; }
+      if (i == n1) { break; }
+      while (j < n2 && list2.ids[j] < list1.ids[i]) { j++; }
+      if (j == n2) { break; }
       if (list1.ids[i] == list2.ids[j]) {
-        if (list1.ids[i] == maxValue) { break; }
         ids.add(list1.ids[i]);
         scores.add(list1.scores[i] + list2.scores[j]);
         i++;
         j++;
       }
     }
+
     // while (i < n1 && j < n2) {
     //   if (list1.ids[i] < list2.ids[j]) { i++; }
     //   if (i == n1) { break; }

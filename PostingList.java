@@ -16,8 +16,8 @@ public class PostingList {
   public PostingList(ArrayList<Integer> ids, ArrayList<Integer> scores,
     int numRepeats, int offset) {
     int n = ids.size();
-    this.ids = new int[n * numRepeats + 1];
-    this.scores = new int[n * numRepeats + 1];
+    this.ids = new int[n * numRepeats];
+    this.scores = new int[n * numRepeats];
     // this.ids = new ArrayList<Integer>(n * numRepeats);
     // this.scores = new ArrayList<Integer>(n * numRepeats);
     for (int k = 0; k < numRepeats; k++) {
@@ -26,8 +26,8 @@ public class PostingList {
         this.scores[i + k * n] = scores.get(i);
       }
     }
-    this.ids[n * numRepeats] = Integer.MAX_VALUE;
-    this.scores[n * numRepeats] = Integer.MAX_VALUE;
+ /*   this.ids[n * numRepeats] = Integer.MAX_VALUE;
+    this.scores[n * numRepeats] = Integer.MAX_VALUE;*/
   }
 
   /**

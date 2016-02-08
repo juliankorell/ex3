@@ -10,7 +10,7 @@ import java.io.IOException;
 public class ListIntersectionMain {
 
   public static void main(String[] args) throws IOException {
-    String listNames[] = { "film", "comedy" };
+    String listNames[] = { "film", "2015" };
     int m = listNames.length;
     ListIntersection li = new ListIntersection();
 
