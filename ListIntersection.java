@@ -73,28 +73,66 @@ public class ListIntersection {
     }
     ArrayList<Integer> ids = new ArrayList<Integer>();
     ArrayList<Integer> scores = new ArrayList<Integer>();
+    int leftBoundary = 0;
+    int rightBoundary = list2.ids.length - 1;
     int i = 0;
     while (i < list1.ids.length) {
-      int binaryResult = binarySearch(list1.ids[i], list2.ids);
+      int binaryResult = binarySearch(list1.ids[i], list2.ids,
+              leftBoundary, rightBoundary);
       if (binaryResult != -1) {
         ids.add(list1.ids[i]);
         scores.add(list1.scores[i] + list2.scores[binaryResult]);
+        leftBoundary = binaryResult + 1;
       }
       i++;
     }
     return new PostingList(ids, scores, 1, 0);
   }
 
-  int binarySearch(int key, int[] ids) {
-    int low = 0;
-    int high = ids.length - 1;
+  PostingList intersectGallop(PostingList list1, PostingList list2) {
+    if (list1.ids.length > list2.ids.length) {
+      return intersectBinary(list2, list1);
+    }
+    ArrayList<Integer> ids = new ArrayList<Integer>();
+    ArrayList<Integer> scores = new ArrayList<Integer>();
+    int leftBoundary = 0;
+    int i = 0;
+
+    while (i < list1.ids.length) {
+      int binaryResult = exponentialSearch(list1.ids[i],
+              leftBoundary, list2.ids);
+      if (binaryResult != -1) {
+        ids.add(list1.ids[i]);
+        scores.add(list1.scores[i] + list2.scores[binaryResult]);
+        leftBoundary = binaryResult + 1;
+      }
+      i++;
+    }
+    return new PostingList(ids, scores, 1, 0);
+  }
+
+  int binarySearch(int key, int[] ids, int leftBoundary, int rightBoundary) {
+    int low = leftBoundary;
+    int high = rightBoundary;
     while (low <= high) {
       int mid = low + (high - low) / 2;
-      if  (key < ids[mid]) { high = mid - 1; }
-      else if (key > ids[mid]) { low = mid + 1; }
-      else return mid;
+      if  (key < ids[mid]) {
+        high = mid - 1;
+      } else if (key > ids[mid]) {
+        low = mid + 1;
+      } else { return mid; }
     }
     return -1;
+  }
+
+  int exponentialSearch(int key, int leftBoundary, int[] ids) {
+    int gallop = 1;
+    while (leftBoundary + gallop < ids.length && key
+            > ids[leftBoundary + gallop]) {
+      gallop *= 2;
+    }
+    return binarySearch(key, ids, (leftBoundary + gallop) / 2,
+            Math.min(leftBoundary + gallop, ids.length - 1));
   }
 
   /**

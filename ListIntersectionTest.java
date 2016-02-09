@@ -57,10 +57,40 @@ public class ListIntersectionTest {
     ListIntersection li = new ListIntersection();
     int key1 = 4;
     int key2 = 3;
-    int[] list1 = new int[]{1,2,4,6,7};
-    int result1 = li.binarySearch(key1, list1);
-    int result2 = li.binarySearch(key2, list1);
+    int[] list1 = new int[]{1, 2, 4, 6, 7};
+    int result1 = li.binarySearch(key1, list1, 0, 4);
+    int result2 = li.binarySearch(key2, list1, 0, 4);
     Assert.assertEquals(2, result1);
     Assert.assertEquals(-1, result2);
+  }
+
+  @Test
+  public void exponentialSearch() throws IOException {
+    ListIntersection li = new ListIntersection();
+    int key1 = 4;
+    int key2 = 3;
+    int key3 = 9;
+    int key4 = 7;
+    int[] list1 = new int[]{1, 2, 4, 6, 7};
+    int result1 = li.exponentialSearch(key1, 0, list1);
+    int result2 = li.exponentialSearch(key2, 0, list1);
+    int result3 = li.exponentialSearch(key3, 0, list1);
+    int result4 = li.exponentialSearch(key4, 0, list1);
+    Assert.assertEquals(2, result1);
+    Assert.assertEquals(-1, result2);
+    Assert.assertEquals(-1, result3);
+    Assert.assertEquals(4, result4);
+  }
+
+  @Test
+  public void intersectGallop() throws IOException {
+    ListIntersection li = new ListIntersection();
+    PostingList list1 = li.readPostingList("example1.txt", 2, 50);
+    PostingList list2 = li.readPostingList("example2.txt", 2, 50);
+    PostingList list = li.intersectGallop(list1, list2);
+    Assert.assertEquals("[10, 20, 60, 70]",
+            Arrays.toString(list.ids));
+    Assert.assertEquals("[2, 4, 2, 4]",
+            Arrays.toString(list.scores));
   }
 }

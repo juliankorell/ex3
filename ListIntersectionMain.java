@@ -10,7 +10,7 @@ import java.io.IOException;
 public class ListIntersectionMain {
 
   public static void main(String[] args) throws IOException {
-    String listNames[] = { "film", "2015" };
+    String listNames[] = { "film", "comedy" };
     int m = listNames.length;
     ListIntersection li = new ListIntersection();
 
@@ -35,7 +35,7 @@ public class ListIntersectionMain {
       System.out.print("Intersecting \"film\" with \"comedy\" ...");
       System.out.flush();
       long time1 = System.currentTimeMillis();
-      li.intersect(lists[0], lists[1]);
+      li.intersectGallop(lists[0], lists[1]);
       long time2 = System.currentTimeMillis();
       System.out.println("done in " + (time2 - time1) + "ms");
     }
